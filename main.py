@@ -1,7 +1,7 @@
 from utils import *
 from tqdm import tqdm
 
-csv_path = 'E:/dataset/mdp_classify-master/MDP/JM1.csv'
+csv_path = 'E:/dataset/mdp_classify-master/MDP/KC4.csv'
 train_data, train_label, test_data, test_label = generate_data(csv_path)
 n_epochs = 100
 n_ants = 10
@@ -10,7 +10,7 @@ print("the Num of the total features:", n_dims)
 
 alpha = 1
 beta = 0.2
-omega = 0.7
+omega = 0.8
 rho = 0.3
 mu = 0.7
 gamma = 0.7
@@ -18,7 +18,7 @@ gamma = 0.7
 tau = np.ones([n_dims, n_dims]) # tau 即信息素矩阵
 # eta = np.ones([n_dims, n_dims]) # eta 即启发式信息
 feat_list = list(range(n_dims)) # feature 总list
-best_score = 0.0
+best_score = np.inf
 score_list = []
 acc_list = []
 
@@ -51,13 +51,13 @@ for epoch in range(n_epochs):
                                                     # 计算适应度函数
         ant_score[j] = f
         ant_acc[j] = acc
-        if f > best_score:                          # 保存为全局的最优解
+        if f <= best_score:                          # 保存为全局的最优解
             best_path = ant_path[j]
             best_score = f
             best_path_acc = acc
     
-    best_ant = np.argmax(ant_score)                 # 最优蚂蚁
-    near_ant = np.argmax(np.concatenate([ant_score[:best_ant], [0], ant_score[best_ant+1:]]))
+    best_ant = np.argmin(ant_score)                 # 最优蚂蚁
+    near_ant = np.argmin(np.concatenate([ant_score[:best_ant], [0], ant_score[best_ant+1:]]))
                                                     # 第二优蚂蚁
     print("Best Score: {}, the Accuracy: {}, Num of Features: {}".format(\
         ant_score[best_ant], ant_acc[best_ant], n_feats[best_ant]))

@@ -52,7 +52,7 @@ def select_route(prob):
     
     return i
 
-def fitness_func(train_data, train_label, test_data, test_label, selected, omega=0.7):
+def fitness_func(train_data, train_label, test_data, test_label, selected, omega=0.8):
     """适应度函数，评估特征子集好坏
     Returns:
         result: 适应度
@@ -64,7 +64,7 @@ def fitness_func(train_data, train_label, test_data, test_label, selected, omega
     cf_matrix = confusion_matrix(test_label, pred)
     TN, FP = cf_matrix[0][0], cf_matrix[0][1]
     FPR = FP / (TN + FP)
-    f_result = omega*FPR + (1-omega)*(len(selected)/train_data.shape[1])
+    f_result = omega*FPR + (1-omega)*np.exp((1-(len(selected)/train_data.shape[1])) / 2)
     acc = accuracy_score(test_label, pred)
     return f_result, acc
 
